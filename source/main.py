@@ -5,6 +5,7 @@ from os import path
 from decouple import config
 from pathlib import Path
 from watchdog.observers import Observer
+import os
 name = ""
 date_file = ""
 
@@ -22,7 +23,7 @@ class custom_event_handler(PatternMatchingEventHandler):
         self.source_path = source_path
         self.print_info = None
 
-    def on_moved(event):
+    def on_moved(selft, event):
         global name
         p = Path(event.src_path).name
         # name = p
@@ -32,33 +33,37 @@ class custom_event_handler(PatternMatchingEventHandler):
         p = Path(event.src_path)
         name = p
 
-    def on_deleted(event):
+    def on_deleted(selft, event):
         global name
         p = Path(event.src_path).name
         # name = p
 
-    def on_modified(event):
+    def on_modified(selft, event):
         global name
         p = Path(event.src_path).name
         # name = p
         # print(p)
 
-    def on_closed(event):
+    def on_closed(selft, event):
         global name
         p = Path(event.src_path).name
         # name = p
 
-    def return_logs(self):
+    def return_logs(selft, event):
         return self.print_info
 
-
+ 
 # main function
 if __name__ == "__main__":
-    path_susbrib = config("PATH_FOR_SUSCRIB")
+    # path_susbrib = config("PATH_FOR_SUSCRIB")
+    # path_susbrib = os.getcwd()
+    path_susbrib = "/source"
+    
     custom_handler = custom_event_handler(source_path=path_susbrib)
     my_observer = Observer()
     my_observer.schedule(custom_handler, path_susbrib, recursive=True)
     my_observer.start()
+    print("Iniciando Script")
     try:
         while True:
             if (name != date_file) and (name != ""):

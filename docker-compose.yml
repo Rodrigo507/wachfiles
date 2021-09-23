@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  watch:
+    build:
+      context: .
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./source:/source
+    command: >
+      sh -c "python3 /source/main.py"
